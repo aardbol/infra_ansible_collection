@@ -1,3 +1,5 @@
 ---
 skip_list:
+  # TODO: add changelog when ready
+  - changelog
   - name[casing]
