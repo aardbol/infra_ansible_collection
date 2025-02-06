@@ -24,7 +24,7 @@ jobs:
         run: pip install yamllint ansible ansible-lint
 
       - name: Run yamllint
-        run: yamllint node_base || (echo "YAML Lint failed! Check logs." && exit 1)
+        run: yamllint -c .yamllint node_base || (echo "YAML Lint failed! Check logs." && exit 1)
 
       - name: Run ansible-lint
         run: ansible-lint node_base || (echo "Ansible Lint failed! Check logs." && exit 1)
