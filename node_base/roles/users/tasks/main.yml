@@ -1,43 +1,43 @@
 ---
 - block:
 
-  - name: Users | Add {{ node_base_default_user }} pubkey to authorized_keys
+  - name: Users | Add {{ users_default_user }} pubkey to authorized_keys
     ansible.posix.authorized_key:
-      user: "{{ node_base_default_user }}"
-      key: "{{ node_base_default_user_pubkeys }}"
+      user: "{{ users_default_user }}"
+      key: "{{ users_default_user_pubkeys }}"
       exclusive: true
-    when: node_base_default_user_pubkeys
+    when: users_default_user_pubkeys
 
   - name: Users | Create groups
     ansible.builtin.group:
       name: "{{ item.name }}"
       state: "{{ item.state | default('present') }}"
       system: "{{ item.system | default(false) }}"
-    loop: "{{ node_base_groups | unique }}"
+    loop: "{{ users_groups | unique }}"
 
   - name: Users | Create groups
     ansible.builtin.group:
       name: "{{ item }}"
-    loop: "{{ node_base_groups | unique }}"
+    loop: "{{ users_groups | unique }}"
 
   - name: Users | Create extra users
     ansible.builtin.user:
       name: "{{ item.username }}"
       comment: "{{ item.full_name }}"
       password: "{{ item.password | default('*') }}"
-      shell: "{{ item.shell | default(node_base_default_shell) }}"
+      shell: "{{ item.shell | default(users_default_shell) }}"
       groups: "{{ item.groups | default([]) }}"
       append: false
       state: "{{ item.state | default('present') }}"
       remove: "{{ item.remove | default(true) }}"
-    loop: "{{ node_base_users }}"
+    loop: "{{ users_users }}"
 
   - name: Users | Add pubkey to authorized_keys
     ansible.posix.authorized_key:
       user: "{{ item.username }}"
       key: "{{ item.ssh_keys }}"
       exclusive: true
-    loop: "{{ node_base_users }}"
+    loop: "{{ users_users }}"
     ignore_errors: "{{ ansible_check_mode }}"
 
   # Lingering is a systemd feature that keeps a user's session running even after they log out
@@ -49,7 +49,7 @@
       state: touch
       modification_time: preserve
       access_time: preserve
-    loop: "{{ node_base_users }}"
+    loop: "{{ users_users }}"
     when: item.options.linger is defined and item.options.linger
 
   - name: Config | Allow nopasswd sudo
@@ -58,6 +58,6 @@
       group: sudo
       commands: ALL
       validation: required
-    when: node_base_nopasswd_sudo
+    when: users_nopasswd_sudo
 
   tags: users
