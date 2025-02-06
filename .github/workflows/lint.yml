@@ -1,0 +1,30 @@
+name: Lint Ansible Collection
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    name: Run YAML and Ansible Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install yamllint ansible ansible-lint
+
+      - name: Run yamllint
+        run: yamllint ansiblecollection || (echo "YAML Lint failed! Check logs." && exit 1)
+
+      - name: Run ansible-lint
+        run: ansible-lint ansiblecollection || (echo "Ansible Lint failed! Check logs." && exit 1)
