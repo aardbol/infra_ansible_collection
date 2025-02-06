@@ -1,0 +1,36 @@
+---
+
+# Default root user: mostly it's root, sometimes it's ec2-user, ubuntu, etc.
+# If left empty, the role will try to detect the default user
+node_base_default_user: root
+
+# Set the default public key for the default user. Define multiple ones with | multi-string
+# Only these keys will be in the authorized_keys file
+node_base_default_user_pubkeys: ""
+
+# Create additional users. To remove them, don't just remove them from this list because Ansible will become
+# unaware of them. Instead, set their state to "absent" or remove them from the list and run the playbook again.
+# Note: append is set to false, so the groups for the user will be overwritten
+node_base_users: []
+  # - username:
+  #   full_name:
+  #   ssh_keys:      Required, define multiple with | multi-string, unlisted keys will be removed
+  #   password:      Optional, default "*"
+  #   shell:         Optional, default {{ node_base_default_shell }}
+  #   groups: []     Optional, recommended "ssh" for ssh access
+  #   state:         Optional, default "present"
+  #   remove:        Optional, default true, to remove the folders associated with the user
+  #   options: {}    Optional, e.g. linger: true
+
+# Create additional groups. To remove them, don't just remove them from this list because Ansible will become
+# unaware of them. Instead, set their state to "absent" or remove them from the list and run the playbook again.
+# You can also specify if the group is a system group by setting the 'system' attribute to true.
+node_base_groups: []
+  # - name:           Required, the name of the group
+  #   state:          Optional, default "present"
+  #   system:         Optional, default false
+
+node_base_default_shell: /bin/bash
+
+# Allow NOPASSWD sudo for sudo group
+node_base_nopasswd_sudo: false

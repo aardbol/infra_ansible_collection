@@ -1,0 +1,35 @@
+---
+namespace: node_base
+name: node_base
+version: 1.0.0
+readme: README.md
+authors:
+  - Leonardo Malik @aardbol
+description: Ansible collection for infrastructure setup
+license: https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+tags:
+  - linux
+  - system
+  - server
+  - security
+  - hardening
+  - nftables
+  - ssh
+  - users
+  - packages
+dependencies:
+  community.general: ">=4.3.0"
+repository: https://github.com/aardbol/infra_ansible_collection
+documentation: https://github.com/aardbol/infra_ansible_collection
+homepage: https://github.com/aardbol/infra_ansible_collection
+issues: https://github.com/aardbol/infra_ansible_collection/issues
+build_ignore:
+  - .env.*
+  - .git
+  - .github
+  - .gitignore
+  - .idea
+  - .vscode
+  - .DS_Store
+  - "*.tar.gz"
+  - tests/*
