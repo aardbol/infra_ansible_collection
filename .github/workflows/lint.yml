@@ -27,4 +27,4 @@ jobs:
         run: yamllint -c .yamllint node_base || (echo "YAML Lint failed! Check logs." && exit 1)
 
       - name: Run ansible-lint
-        run: ansible-lint node_base || (echo "Ansible Lint failed! Check logs." && exit 1)
+        run: ansible-lint -c .ansible-lint node_base || (echo "Ansible Lint failed! Check logs." && exit 1)
