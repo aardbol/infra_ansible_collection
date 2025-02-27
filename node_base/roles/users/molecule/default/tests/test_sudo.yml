@@ -1,0 +1,7 @@
+---
+- name: Check if nopasswd sudo is configured
+  ansible.builtin.command: grep "NOPASSWD" /etc/sudoers.d/custom_sudo
+  register: sudo_check
+  failed_when: sudo_check.rc != 0
+  changed_when: false
+  when: users_nopasswd_sudo is defined and users_nopasswd_sudo

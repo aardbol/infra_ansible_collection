@@ -1,0 +1,20 @@
+---
+- name: Verify default user exists
+  ansible.builtin.command: id {{ users_default_user }}
+  register: result
+  failed_when: result.rc != 0
+  changed_when: false
+
+- name: Verify default root user authorized_keys
+  ansible.builtin.command: cat {{ users_default_user }}/.ssh/authorized_keys
+  register: result
+  failed_when: users_default_user_pubkeys not in result.stdout
+  changed_when: false
+  when: users_default_user_pubkeys != '' and users_default_user == 'root'
+
+- name: Verify other default user authorized_keys
+  ansible.builtin.command: cat /home/{{ users_default_user }}/.ssh/authorized_keys
+  register: result
+  failed_when: users_default_user_pubkeys not in result.stdout
+  changed_when: false
+  when: users_default_user_pubkeys != '' and users_default_user != 'root'

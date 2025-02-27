@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: ${DRIVER:-docker}
+
+platforms:
+  - name: instance
+    image: docker.io/geerlingguy/docker-ubuntu2204-ansible
+    privileged: true
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+  options:
+    D: true
+  config_options:
+    defaults:
+      callbacks_enabled: timer
+
+verifier:
+  name: ansible
+  options:
+    D: true
