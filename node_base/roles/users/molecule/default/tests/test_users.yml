@@ -12,7 +12,7 @@
   register: user_keys_check
   failed_when: item.ssh_keys | trim not in user_keys_check.stdout
   changed_when: false
-  when: item.system | default(false) == false
+  when: not (item.system | default(false))
 
 - name: Check if linger is enabled for users
   ansible.builtin.stat:
