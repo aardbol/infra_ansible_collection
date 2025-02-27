@@ -17,11 +17,6 @@
       system: "{{ item.system | default(false) }}"
     loop: "{{ users_groups | unique }}"
 
-  - name: Users | Create groups
-    ansible.builtin.group:
-      name: "{{ item }}"
-    loop: "{{ users_groups | unique }}"
-
   - name: Users | Create extra users
     ansible.builtin.user:
       name: "{{ item.username }}"
@@ -31,6 +26,7 @@
       groups: "{{ item.groups | default([]) }}"
       append: false
       state: "{{ item.state | default('present') }}"
+      system: "{{ item.system | default(false) }}"
       remove: "{{ item.remove | default(true) }}"
     loop: "{{ users_users }}"
 
@@ -41,6 +37,7 @@
       exclusive: true
     loop: "{{ users_users }}"
     ignore_errors: "{{ ansible_check_mode }}"
+    when: item.system | default(false) == false
 
   # Lingering is a systemd feature that keeps a user's session running even after they log out
   # This is useful for services that need to run as a user, like a container run with podman
@@ -54,7 +51,7 @@
     loop: "{{ users_users }}"
     when: item.options.linger is defined and item.options.linger
 
-  - name: Config | Allow nopasswd sudo
+  - name: Users | Allow nopasswd sudo
     community.general.sudoers:
       name: custom_sudo
       group: sudo

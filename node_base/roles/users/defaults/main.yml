@@ -14,11 +14,12 @@ users_default_user_pubkeys: ""
 users_users: []
   # - username:
   #   full_name:
-  #   ssh_keys:      Required, define multiple with | multi-string, unlisted keys will be removed
+  #   ssh_keys:      Required, define multiple with | multi-string, unlisted keys will be removed. Optional when system is true
   #   password:      Optional, default "*"
   #   shell:         Optional, default {{ users_default_shell }}
   #   groups: []     Optional, recommended "ssh" for ssh access
   #   state:         Optional, default "present"
+  #   system:        Optional, default false
   #   remove:        Optional, default true, to remove the folders associated with the user
   #   options: {}    Optional, e.g. linger: true
 
