@@ -15,6 +15,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Required Ansible Collections
+        run: ansible-galaxy collection install -r requirements.yml
+
       - name: Install dependencies
         run: pip install ansible-lint
 
