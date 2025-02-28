@@ -15,6 +15,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: pip install ansible-lint
+
       - name: Run yamllint
         run: yamllint -c .yamllint node_base
 
