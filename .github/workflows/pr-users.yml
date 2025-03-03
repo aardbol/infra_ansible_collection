@@ -8,7 +8,7 @@ on:
 
 jobs:
   run-molecule-tests:
-    uses: .github/workflows/reusable-molecule.yml
+    uses: ./.github/workflows/reusable-molecule.yml
     with:
       collection-name: node_base
       role-name: users
