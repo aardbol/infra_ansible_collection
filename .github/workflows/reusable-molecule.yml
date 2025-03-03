@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+    inputs:
+      collection-name:
+        required: true
+        type: string
+      role-name:
+        required: true
+        type: string
+jobs:
+  molecule:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: "${{ github.repository }}"
+      - name: Check if there are molecule tests
+        run: |
+          if [ -d "molecule" ]; then
+            echo "MOLECULE_TESTS=YES" >> "${GITHUB_ENV}"
+          fi
+        working-directory: "${{ github.repository }}/roles/${{ inputs.role-name }}"
+      - name: Set up dependencies
+        run: pip install --no-cache-dir ansible-lint molecule molecule-plugins[podman]
+      - name: Run lint
+        run: |
+          set -e
+          yamllint .
+          ansible-lint
+        working-directory: "${{ github.repository }}/roles/${{ inputs.role-name }}"
+      - name: Run molecule tests
+        if: env.MOLECULE_TESTS == 'YES'
+        run: molecule test -d podman --all
+        working-directory: "${{ github.repository }}/roles/${{ inputs.role-name }}"

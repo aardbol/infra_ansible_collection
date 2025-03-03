@@ -1,0 +1,17 @@
+name: check PR (users)
+
+on:
+  pull_request:
+    paths:
+      - node_base/roles/users/**
+      - .github/**
+
+jobs:
+  run-molecule-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+    uses: .github/workflows/reusable-molecule.yml
+    with:
+      collection-name: node_base
+      role-name: users
