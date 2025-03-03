@@ -32,4 +32,4 @@ jobs:
       - name: Run molecule tests
         if: env.MOLECULE_TESTS == 'YES'
         run: molecule test -d podman --all
-        working-directory: "$${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
+        working-directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
