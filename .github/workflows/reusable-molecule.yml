@@ -13,20 +13,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: "${{ github.repository }}"
       - name: Check if there are molecule tests
         run: |
           if [ -d "molecule" ]; then
             echo "MOLECULE_TESTS=YES" >> "${GITHUB_ENV}"
           fi
-        working-directory: "${{ github.repository }}/${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
+        working-directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
       - name: Run ansible-lint
         uses: ansible/ansible-lint@main
         with:
           args: ""
           setup_python: "false"
-          working_directory: "${{ github.repository }}/${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
+          working_directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
           requirements_file: "requirements.yml"
       - name: Set up molecule
         if: env.MOLECULE_TESTS == 'YES'
@@ -34,4 +32,4 @@ jobs:
       - name: Run molecule tests
         if: env.MOLECULE_TESTS == 'YES'
         run: molecule test -d podman --all
-        working-directory: "${{ github.repository }}/${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
+        working-directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
