@@ -25,7 +25,7 @@ jobs:
           args: ""
           setup_python: "false"
           working_directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
-          requirements_file: "${{ inputs.collection-name }}/requirements.yml"
+          requirements_file: "../../requirements.yml"
       - name: Set up molecule
         if: env.MOLECULE_TESTS == 'YES'
         run: pip install --no-cache-dir molecule molecule-plugins[podman]
