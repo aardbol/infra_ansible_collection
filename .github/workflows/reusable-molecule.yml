@@ -23,7 +23,7 @@ jobs:
           args: "-c .ansible-lint"
           setup_python: "false"
           working_directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
-          requirements_file: requirements.yml
+          requirements_file: ../../requirements.yml
 
   molecule:
     runs-on: ubuntu-24.04
@@ -50,4 +50,8 @@ jobs:
       - name: Run molecule tests
         if: env.MOLECULE_TESTS == 'YES'
         run: molecule test -d podman --all
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
         working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
