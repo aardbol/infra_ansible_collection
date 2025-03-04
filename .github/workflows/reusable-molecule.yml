@@ -22,7 +22,7 @@ jobs:
       - name: Run ansible-lint
         uses: ansible/ansible-lint@v25
         with:
-          args: "-c ../../.ansible-lint"
+          args: "-c ../../"
           setup_python: "false"
           working_directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
           requirements_file: ../../requirements.yml
