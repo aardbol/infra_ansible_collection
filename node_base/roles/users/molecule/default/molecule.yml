@@ -7,7 +7,7 @@ driver:
 
 platforms:
   - name: instance
-    image: docker.io/geerlingguy/docker-ubuntu2204-ansible
+    image: docker.io/ubuntu:24.04
     privileged: true
     pre_build_image: true
 
