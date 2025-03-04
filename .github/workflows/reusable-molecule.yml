@@ -32,5 +32,5 @@ jobs:
         run: pip install --no-cache-dir molecule molecule-plugins[podman]
       - name: Run molecule tests
         if: env.MOLECULE_TESTS == 'YES'
-        run: molecule test --all
+        run: molecule test -d podman --all
         working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
