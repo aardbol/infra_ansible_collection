@@ -1,8 +1,14 @@
 name: check PR (users)
 
 on:
-  workflow_dispatch:
   pull_request:
+    paths:
+      - node_base/roles/users/**
+      - .github/**
+  # TODO: remove when enforcing PRs
+  push:
+    branches:
+      - main
     paths:
       - node_base/roles/users/**
       - .github/**
