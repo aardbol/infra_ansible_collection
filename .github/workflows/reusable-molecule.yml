@@ -7,12 +7,35 @@ on:
       role-name:
         required: true
         type: string
+
 jobs:
-  molecule:
+
+  lint:
+    name: lint
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@v25
+        with:
+          args: "-c .ansible-lint"
+          setup_python: "false"
+          working_directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
+          requirements_file: requirements.yml
+
+  molecule:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        distro:
+          - ubuntu2404
+          - debian12
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Check if there are molecule tests
         run: |
           if [ -d "molecule" ]; then
@@ -20,16 +43,10 @@ jobs:
           fi
         working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
 
-      - name: Run ansible-lint
-        uses: ansible/ansible-lint@v25
-        with:
-          args: "-c ../../.ansible-lint"
-          setup_python: "false"
-          working_directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
-          requirements_file: ../../requirements.yml
       - name: Set up molecule
         if: env.MOLECULE_TESTS == 'YES'
         run: pip install --no-cache-dir molecule molecule-plugins[podman]
+
       - name: Run molecule tests
         if: env.MOLECULE_TESTS == 'YES'
         run: molecule test -d podman --all
