@@ -19,10 +19,11 @@ jobs:
             echo "MOLECULE_TESTS=YES" >> "${GITHUB_ENV}"
           fi
         working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
+
       - name: Run ansible-lint
         uses: ansible/ansible-lint@v25
         with:
-          args: "-vv -c ../../.ansible-lint"
+          args: "-c ../../.ansible-lint"
           setup_python: "false"
           working_directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
           requirements_file: ../../requirements.yml
