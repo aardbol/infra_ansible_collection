@@ -18,18 +18,18 @@ jobs:
           if [ -d "molecule" ]; then
             echo "MOLECULE_TESTS=YES" >> "${GITHUB_ENV}"
           fi
-        working-directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
+        working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@main
+        uses: ansible/ansible-lint@v25
         with:
-          args: ""
+          args: "-c ../../.ansible-lint"
           setup_python: "false"
-          working_directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
-          requirements_file: "../../requirements.yml"
+          working_directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
+          requirements_file: ../../requirements.yml
       - name: Set up molecule
         if: env.MOLECULE_TESTS == 'YES'
         run: pip install --no-cache-dir molecule molecule-plugins[podman]
       - name: Run molecule tests
         if: env.MOLECULE_TESTS == 'YES'
-        run: molecule test -d podman --all
-        working-directory: "${{ inputs.collection-name }}/roles/${{ inputs.role-name }}"
+        run: molecule test --all
+        working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
