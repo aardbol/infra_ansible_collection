@@ -1,5 +1,5 @@
 ---
-- name: Users | Store private key temporarily
+- name: Store private key temporarily
   ansible.builtin.copy:
     content: "{{ users_git_users.key_file }}"
     dest: /dev/shm/ansible_git_users_key
@@ -8,7 +8,7 @@
     mode: "0600"
   when: users_git_users.key_file is defined
 
-- name: Users | Create a temporary directory
+- name: Create a temporary directory
   ansible.builtin.file:
     path: /tmp/ansible_git_users
     state: directory
@@ -16,7 +16,7 @@
     group: root
     mode: "0700"
 
-- name: Users | Clone git repository
+- name: Clone git repository
   ansible.builtin.git:
     key_file: "{{ '/dev/shm/ansible_git_users_key' if users_git_users.key_file is defined else omit }}"
     repo: "{{ users_git_users.git_url }}"
@@ -25,12 +25,12 @@
     single_branch: true
     force: true
 
-- name: Users | Load user data from cloned repository
+- name: Load user data from cloned repository
   ansible.builtin.include_vars:
     file: "{{ _users_git_path }}/users.yml"
     name: _loaded_users
 
-- name: Users | Set user data
+- name: Set user data
   ansible.builtin.set_fact:
     _users_data: "{{ (users_git_users.git_url) | ternary(_loaded_users.users_users, users_users) }}"
       
