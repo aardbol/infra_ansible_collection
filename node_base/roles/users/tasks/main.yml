@@ -46,6 +46,7 @@
     - name: Users | Clone git repository
       ansible.builtin.git:
         key_file: "{{ _users_git_keyfile_path if users_git_users.key_file is defined else omit }}"
+        accept_newhostkey: "{{ users_git_users.accept_newhostkey | default(false) }}"
         repo: "{{ users_git_users.git_url }}"
         dest: "{{ _users_git_path }}"
         version: "{{ users_git_users.git_version | default('HEAD') }}"

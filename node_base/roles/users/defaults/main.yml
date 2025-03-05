@@ -29,9 +29,10 @@ users_users: []
 # users.yml must define a `users_users` list (same format as `users_users` var).
 # To remove users, set their state to "absent" and run the playbook again.
 users_git_users: {}
-  # git_url:         Required, the URL of the git repository
-  # key_file:        Optional, the private key for authentication (vault encrypted)
-  # git_version:     Optional, default "HEAD"
+  # git_url:           Required, the URL of the git repository
+  # key_file:          Optional, the private key for authentication (vault encrypted)
+  # git_version:       Optional, default "HEAD"
+  # accept_newhostkey: Optional, default false
 
 # Create additional groups. To remove them, don't just remove them from this list because Ansible will become
 # unaware of them. Instead, set their state to "absent" or remove them from the list and run the playbook again.

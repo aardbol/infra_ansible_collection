@@ -13,6 +13,9 @@ on:
       - node_base/roles/users/**
       - .github/**
 
+env:
+  USERS_REPO_KEYFILE: ${{ secrets.USERS_REPO_KEYFILE }}
+
 jobs:
   run-molecule-tests:
     uses: ./.github/workflows/reusable-molecule.yml
