@@ -52,20 +52,14 @@
         single_branch: true
         force: true
 
-    - name: List directory contents
-      ansible.builtin.find:
-        paths: "{{ _users_git_path }}"
-        file_type: any
-      register: dir_contents
+    - name: Users | Slurp user data from cloned repository
+      ansible.builtin.slurp:
+        src: "{{ _users_git_path }}/users.yml"
+      register: _slurped_users
 
-    - name: Display directory contents
-      debug:
-        var: dir_contents.files
-
-    - name: Users | Load user data from cloned repository
-      ansible.builtin.include_vars:
-        file: "{{ _users_git_path }}/users.yml"
-        name: _loaded_users
+    - name: Users | Decode and set user data
+      ansible.builtin.set_fact:
+        _loaded_users: "{{ _slurped_users.content | b64decode | from_yaml }}"
 
     - name: Users | Remove temporary paths
       ansible.builtin.file:
