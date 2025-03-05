@@ -1,17 +1,11 @@
 ---
-- name: List directory contents
-  ansible.builtin.find:
-    paths: /tmp/ansible_git_users
-    file_type: any
-  register: dir_contents
-
-- name: Display directory contents
-  debug:
-    var: dir_contents.files
+- name: Include role vars
+  ansible.builtin.include_vars:
+      file: ../../../users/vars/main.yml
 
 - name: Load user data from cloned repository
   ansible.builtin.include_vars:
-    file: /tmp/ansible_git_users/users.yml
+    file: "{{ _users_git_path }}/users.yml"
     name: _loaded_users
 
 - name: Check if extra users are created

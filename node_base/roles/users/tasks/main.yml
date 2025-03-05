@@ -52,6 +52,16 @@
         single_branch: true
         force: true
 
+    - name: List directory contents
+      ansible.builtin.find:
+        paths: "{{ _users_git_path }}"
+        file_type: any
+      register: dir_contents
+
+    - name: Display directory contents
+      debug:
+        var: dir_contents.files
+
     - name: Users | Load user data from cloned repository
       ansible.builtin.include_vars:
         file: "{{ _users_git_path }}/users.yml"
