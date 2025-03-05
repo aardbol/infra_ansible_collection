@@ -23,6 +23,7 @@
     loop: "{{ users_groups }}"
 
   - name: Users | Get users from git
+    when: users_git_users.git_url is defined
     block:
 
     - name: Users | Store private key temporarily
@@ -36,7 +37,7 @@
 
     - name: Users | Create a temporary directory
       ansible.builtin.file:
-        path: /tmp/ansible_git_users
+        path: "{{ _users_git_path }}"
         state: directory
         owner: root
         group: root
@@ -46,7 +47,7 @@
       ansible.builtin.git:
         key_file: "{{ _users_git_keyfile_path if users_git_users.key_file is defined else omit }}"
         repo: "{{ users_git_users.git_url }}"
-        dest: /tmp/ansible_git_users
+        dest: "{{ _users_git_path }}"
         version: "{{ users_git_users.git_version | default('HEAD') }}"
         single_branch: true
         force: true
@@ -61,10 +62,9 @@
         path: "{{ item }}"
         state: absent
       loop:
-        - /tmp/ansible_git_users
+        - "{{ _users_git_path }}"
         - "{{ _users_git_keyfile_path }}"
 
-    when: users_git_users.git_url is defined
 
   - name: Users | Set user data
     ansible.builtin.set_fact:
