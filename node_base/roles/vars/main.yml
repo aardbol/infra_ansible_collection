@@ -1,0 +1,6 @@
+---
+_users_sudo_group_name: sudo
+
+_users_git_path: /tmp/ansible_git_users
+
+_users_git_keyfile_path: /dev/shm/ansible_git_users_key

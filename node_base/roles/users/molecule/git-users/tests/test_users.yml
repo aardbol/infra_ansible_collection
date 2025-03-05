@@ -1,0 +1,59 @@
+---
+- name: Users | Store private key temporarily
+  ansible.builtin.copy:
+    content: "{{ users_git_users.key_file }}"
+    dest: /dev/shm/ansible_git_users_key
+    owner: root
+    group: root
+    mode: "0600"
+  when: users_git_users.key_file is defined
+
+- name: Users | Create a temporary directory
+  ansible.builtin.file:
+    path: /tmp/ansible_git_users
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Users | Clone git repository
+  ansible.builtin.git:
+    key_file: "{{ '/dev/shm/ansible_git_users_key' if users_git_users.key_file is defined else omit }}"
+    repo: "{{ users_git_users.git_url }}"
+    dest: /tmp/ansible_git_users
+    version: "{{ users_git_users.git_version | default('HEAD') }}"
+    single_branch: true
+    force: true
+
+- name: Users | Load user data from cloned repository
+  ansible.builtin.include_vars:
+    file: "{{ _users_git_path }}/users.yml"
+    name: _loaded_users
+
+- name: Users | Set user data
+  ansible.builtin.set_fact:
+    _users_data: "{{ (users_git_users.git_url) | ternary(_loaded_users.users_users, users_users) }}"
+      
+- name: Check if extra users are created
+  ansible.builtin.command: id {{ item.username }}
+  loop: "{{ _users_data }}"
+  register: user_check
+  failed_when: user_check.rc != 0
+  changed_when: false
+
+- name: Check if extra users' authorized keys are set
+  ansible.builtin.command: cat /home/{{ item.username }}/.ssh/authorized_keys
+  loop: "{{ _users_data }}"
+  register: user_keys_check
+  failed_when: item.ssh_keys | trim not in user_keys_check.stdout
+  changed_when: false
+  when: not (item.system | default(false))
+
+- name: Check if linger is enabled for users
+  ansible.builtin.stat:
+    path: /var/lib/systemd/linger/{{ item.username }}
+  loop: "{{ _users_data }}"
+  register: linger_check
+  failed_when: linger_check.stat.exists == false
+  changed_when: false
+  when: item.options.linger is defined and item.options.linger

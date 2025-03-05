@@ -9,19 +9,29 @@ users_default_user: root
 users_default_user_pubkeys: ""
 
 # Create additional users. To remove them, don't just remove them from this list because Ansible will become
-# unaware of them. Instead, set their state to "absent" or remove them from the list and run the playbook again.
+# unaware of them. Instead, set their state to "absent" and run the playbook again. After applying, they can be removed
+# from this list. Mutually exclusive with `users_git_users`. Will be ignore if the latter is set.
+#
 # Note: append is set to false, so the groups for the user will be overwritten
 users_users: []
   # - username:
   #   full_name:
   #   ssh_keys:      Required, define multiple with | multi-string, unlisted keys will be removed. Optional when system is true
-  #   password:      Optional, default "*"
+  #   password:      Optional, default "*". Enter the hashed password as the value. Use `mkpasswd --method=SHA-512` to generate one
   #   shell:         Optional, default {{ users_default_shell }}
   #   groups: []     Optional, recommended "ssh" for ssh access
-  #   state:         Optional, default "present"
+  #   state:         Optional, default "present". Set to "absent" to remove the user
   #   system:        Optional, default false
   #   remove:        Optional, default true, to remove the folders associated with the user
   #   options: {}    Optional, e.g. linger: true
+
+# Create additional users from a git repository containing a users.yml file.
+# users.yml must define a `users_users` list (same format as `users_users` var).
+# To remove users, set their state to "absent" and run the playbook again.
+users_git_users: {}
+  # git_url:         Required, the URL of the git repository
+  # key_file:        Optional, the private key for authentication (vault encrypted)
+  # git_version:     Optional, default "HEAD"
 
 # Create additional groups. To remove them, don't just remove them from this list because Ansible will become
 # unaware of them. Instead, set their state to "absent" or remove them from the list and run the playbook again.

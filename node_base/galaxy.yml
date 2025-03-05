@@ -1,11 +1,11 @@
 ---
 namespace: node_base
 name: node_base
-version: 0.0.1
+version: 0.2.0
 readme: README.md
 authors:
   - Leonardo Malik @aardbol
-description: Ansible collection for infrastructure setup
+description: Ansible collection for infrastructure setup on debian based systems
 license:
   - EUPL-1.2
 tags:

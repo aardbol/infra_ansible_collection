@@ -1,0 +1,11 @@
+---
+users_default_user: root
+users_default_user_pubkeys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBXxonWeQySogM1D61oHzBM1JR7KZekotRmOGdpo5XS test@localhost
+
+users_groups:
+  - name: sshsystemgroup
+    system: true
+  - name: notasystemgroup
+
+users_git_users:
+  git_url: https://github.com/aardbol/infra_role_users_repo.git

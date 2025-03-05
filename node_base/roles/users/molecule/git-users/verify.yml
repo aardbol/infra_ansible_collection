@@ -1,0 +1,7 @@
+---
+- name: Verify role application
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Include user creation tests
+      ansible.builtin.include_tasks: tests/test_users.yml
