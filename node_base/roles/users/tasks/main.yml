@@ -61,13 +61,10 @@
       ansible.builtin.set_fact:
         _loaded_users: "{{ _slurped_users.content | b64decode | from_yaml }}"
 
-    - name: Users | Remove temporary paths
+    - name: Users | Remove private key
       ansible.builtin.file:
-        path: "{{ item }}"
+        path: "{{ _users_git_keyfile_path }}"
         state: absent
-      loop:
-        - "{{ _users_git_path }}"
-        - "{{ _users_git_keyfile_path }}"
 
 
   - name: Users | Set user data
