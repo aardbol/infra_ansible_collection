@@ -1,0 +1,11 @@
+---
+users_git_users:
+  git_url: git@github.com:infra-role-users-repo-user/infra_role_users_repo.git
+  key_file: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACBo3ICLP1W4YQ72aNt6bg2L8wbLkguNe2zxJpknX7huVQAAAJAAN6shADer
+    IQAAAAtzc2gtZWQyNTUxOQAAACBo3ICLP1W4YQ72aNt6bg2L8wbLkguNe2zxJpknX7huVQ
+    AAAEC8BpasjYa521qhXe7cbTqj97xJnnQmfCkbfYwmrhrdZWjcgIs/VbhhDvZo23puDYvz
+    BsuSC417bPEmmSdfuG5VAAAACGlrQHBsdXRvAQIDBAU=
+    -----END OPENSSH PRIVATE KEY-----

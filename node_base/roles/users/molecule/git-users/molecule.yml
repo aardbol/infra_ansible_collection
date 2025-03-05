@@ -6,7 +6,7 @@ driver:
   name: ${DRIVER:-podman}
 
 platforms:
-  - name: instance
+  - name: instance-noauth
     image: geerlingguy/docker-${MOLECULE_DISTRO}-ansible:latest
     command: ${MOLECULE_CONTAINER_COMMAND:-""}
     volumes:
@@ -14,6 +14,19 @@ platforms:
     cgroupns_mode: host
     privileged: true
     pre_build_image: true
+    groups:
+      - no_auth_group
+
+  - name: instance-auth
+    image: geerlingguy/docker-${MOLECULE_DISTRO}-ansible:latest
+    command: ${MOLECULE_CONTAINER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    groups:
+      - with_auth_group
 
 provisioner:
   name: ansible
