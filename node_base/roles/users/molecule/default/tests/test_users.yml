@@ -21,4 +21,4 @@
   register: linger_check
   failed_when: linger_check.stat.exists == false
   changed_when: false
-  when: item.options.linger is defined and item.options.linger
+  when: item.get('options', {}).linger | default(false)
