@@ -11,6 +11,7 @@
 
     - name: Include user creation tests
       ansible.builtin.include_tasks: tests/test_users.yml
+      loop: "{{ users_users }}"
 
     - name: Include sudo tests
       ansible.builtin.include_tasks: tests/test_sudo.yml

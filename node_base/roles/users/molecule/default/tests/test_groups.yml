@@ -1,14 +1,14 @@
 ---
 - name: Check if groups exist
   ansible.builtin.command: getent group {{ item.name }}
-  loop: "{{ users_groups | unique }}"
+  loop: "{{ users_groups }}"
   register: group_check
   changed_when: false
   failed_when: group_check.rc != 0
 
 - name: Extract group details
   ansible.builtin.shell: "getent group {{ item.name }} | cut -d: -f3"
-  loop: "{{ users_groups | unique }}"
+  loop: "{{ users_groups }}"
   register: group_gid
   changed_when: false
   failed_when: group_gid.rc != 0
