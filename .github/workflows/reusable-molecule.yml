@@ -8,7 +8,7 @@ on:
         required: true
         type: string
     secrets:
-      USERS_REPO_KEYFILE:
+      USERS_REPO_PAT:
         required: false
 
 jobs:
@@ -57,5 +57,5 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
-          USERS_REPO_KEYFILE: ${{ secrets.USERS_REPO_KEYFILE }}
+          USERS_REPO_PAT: ${{ secrets.USERS_REPO_PAT }}
         working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}

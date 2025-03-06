@@ -30,7 +30,6 @@ users_users: []
 # To remove users, set their state to "absent" and run the playbook again.
 users_git_users: {}
   # git_url:           Required, the URL of the git repository
-  # key_file:          Optional, the private key for authentication (vault encrypted)
   # git_version:       Optional, default "HEAD"
   # accept_newhostkey: Optional, default false
 

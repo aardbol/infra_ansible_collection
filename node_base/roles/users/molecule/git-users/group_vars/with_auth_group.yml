@@ -1,5 +1,4 @@
 ---
 users_git_users:
-  git_url: git@github.com:infra-role-users-repo-user/infra_role_users_repo.git
-  key_file: "{{ lookup('env', 'USERS_REPO_KEYFILE') }}"
+  git_url: https://x-access-token:{{ lookup('env', 'USERS_REPO_PAT') | trim }}@github.com/infra-role-users-repo-user/infra_role_users_repo
   accept_newhostkey: true

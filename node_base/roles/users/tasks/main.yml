@@ -26,15 +26,6 @@
     when: users_git_users.git_url is defined
     block:
 
-    - name: Users | Store private key temporarily
-      ansible.builtin.copy:
-        content: "{{ users_git_users.key_file }}"
-        dest: "{{ _users_git_keyfile_path }}"
-        owner: root
-        group: root
-        mode: "0600"
-      when: users_git_users.key_file is defined
-
     - name: Users | Create a temporary directory
       ansible.builtin.file:
         path: "{{ _users_git_path }}"
@@ -45,7 +36,6 @@
 
     - name: Users | Clone git repository
       ansible.builtin.git:
-        key_file: "{{ _users_git_keyfile_path if users_git_users.key_file is defined else omit }}"
         accept_newhostkey: "{{ users_git_users.accept_newhostkey | default(false) }}"
         repo: "{{ users_git_users.git_url }}"
         dest: "{{ _users_git_path }}"
@@ -61,11 +51,6 @@
     - name: Users | Decode and set user data
       ansible.builtin.set_fact:
         _loaded_users: "{{ _slurped_users.content | b64decode | from_yaml }}"
-
-    - name: Users | Remove private key
-      ansible.builtin.file:
-        path: "{{ _users_git_keyfile_path }}"
-        state: absent
 
 
   - name: Users | Set user data
