@@ -36,10 +36,10 @@
       when: users_git_users.key_file is defined
 
     - name: cat privkey
-      ansible.builtin.shell: cat {{ _users_git_keyfile_path }}
+      ansible.builtin.command: cat {{ _users_git_keyfile_path }}
       register: privkey
 
-    - debug:
+    - ansible.builtin.debug:
         var: privkey
 
     - name: Users | Create a temporary directory
