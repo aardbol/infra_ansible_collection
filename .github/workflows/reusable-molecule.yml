@@ -7,8 +7,6 @@ on:
       role-name:
         required: true
         type: string
-    secrets:
-      USERS_REPO_KEYFILE: ${{ secrets.USERS_REPO_KEYFILE }}
 
 jobs:
 

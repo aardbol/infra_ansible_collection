@@ -26,6 +26,10 @@
     when: users_git_users.git_url is defined
     block:
 
+    - name: Debug key_file variable
+      ansible.builtin.debug:
+        var: users_git_users.key_file
+
     - name: Users | Store private key temporarily
       ansible.builtin.copy:
         content: "{{ users_git_users.key_file }}"
