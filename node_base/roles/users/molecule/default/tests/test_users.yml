@@ -1,24 +1,46 @@
 ---
-- name: Check if extra users are created
-  ansible.builtin.command: id {{ item.username }}
+- name: Verify users attributes
   loop: "{{ users_users }}"
-  register: user_check
-  failed_when: user_check.rc != 0
-  changed_when: false
+  vars:
+    user: "{{ item.username }}"
+    expected_groups: "{{ item.groups | default([]) }}"
+  block:
 
-- name: Check if extra users' authorized keys are set
-  ansible.builtin.command: cat /home/{{ item.username }}/.ssh/authorized_keys
-  loop: "{{ users_users }}"
-  register: user_keys_check
-  failed_when: item.ssh_keys | trim not in user_keys_check.stdout
-  changed_when: false
-  when: not (item.system | default(false))
+  - name: Check if user exists
+    ansible.builtin.command: id {{ user }}
+    register: user_check
+    failed_when: user_check.rc != 0
+    changed_when: false
 
-- name: Check if linger is enabled for users
-  ansible.builtin.stat:
-    path: /var/lib/systemd/linger/{{ item.username }}
-  loop: "{{ users_users }}"
-  register: linger_check
-  failed_when: linger_check.stat.exists == false
-  changed_when: false
-  when: item.get('options', {}).linger | default(false)
+  - name: Verify user shell
+    ansible.builtin.shell:
+      grep '^{{ user }}' /etc/passwd | cut -d: -f7
+    register: user_shell
+    failed_when: user_shell.stdout != (item.shell | default('/bin/bash'))
+
+  - name: Get user groups
+    ansible.builtin.getent:
+      database: group
+      key: "{{ user }}"
+    register: user_groups
+
+  - name: Verify user groups
+    ansible.builtin.assert:
+      that:
+        - expected_groups | difference(user_groups.ansible_facts.getent_group[user][2]) == []
+      fail_msg: "User {{ user }} is missing some expected groups"
+
+  - name: Check if extra users' authorized keys are set
+    ansible.builtin.command: cat /home/{{ user }}/.ssh/authorized_keys
+    register: user_keys_check
+    failed_when: item.ssh_keys | trim not in user_keys_check.stdout
+    changed_when: false
+    when: not (item.system | default(false))
+
+  - name: Check if linger is enabled for users
+    ansible.builtin.stat:
+      path: /var/lib/systemd/linger/{{ user }}
+    register: linger_check
+    failed_when: linger_check.stat.exists == false
+    changed_when: false
+    when: item.get('options', {}).linger | default(false)
