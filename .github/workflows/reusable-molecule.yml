@@ -54,4 +54,5 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
+          USERS_REPO_KEYFILE: ${{ secrets.USERS_REPO_KEYFILE }}
         working-directory: ${{ inputs.collection-name }}/roles/${{ inputs.role-name }}
