@@ -19,5 +19,3 @@ jobs:
     with:
       collection-name: node_base
       role-name: users
-    secrets:
-      USERS_REPO_KEYFILE: ${{ secrets.USERS_REPO_KEYFILE }}
