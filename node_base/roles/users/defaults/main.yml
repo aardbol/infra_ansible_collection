@@ -18,7 +18,7 @@ users_users: []
   #   full_name:
   #   ssh_keys:      Required, define multiple with | multi-string, unlisted keys will be removed. Optional when system is true
   #   password:      Optional, default "*". Enter the hashed password as the value. Use `mkpasswd --method=SHA-512` to generate one
-  #   shell:         Optional, default {{ users_default_shell }}
+  #   shell:         Optional, default `users_default_shell` or `users_system_default_shell` for system users
   #   groups: []     Optional, recommended "ssh" for ssh access
   #   state:         Optional, default "present". Set to "absent" to remove the user
   #   system:        Optional, default false
@@ -42,6 +42,7 @@ users_groups: []
   #   system:         Optional, default false
 
 users_default_shell: /bin/bash
+users_system_default_shell: /usr/sbin/nologin
 
 # Allow NOPASSWD sudo for sudo group
 users_nopasswd_sudo: false

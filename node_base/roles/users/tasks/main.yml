@@ -62,7 +62,7 @@
       name: "{{ item.username }}"
       comment: "{{ item.full_name }}"
       password: "{{ item.password | default('*') }}"
-      shell: "{{ item.shell | default(users_default_shell) }}"
+      shell: "{{ item.shell | default(users_system_default_shell if item.system | default(false) else users_default_shell) }}"
       groups: "{{ item.groups | default([]) }}"
       append: false
       state: "{{ item.state | default('present') }}"
