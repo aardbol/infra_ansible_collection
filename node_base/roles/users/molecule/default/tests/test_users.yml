@@ -11,6 +11,10 @@
     key: "{{ item.username }}"
   register: user_groups
 
+- name: debug groups
+  ansible.builtin.debug:
+      msg: "{{ item.groups | default([]) | difference(user_groups.ansible_facts.getent_group[item.username][2]) }}"
+
 - name: Verify user groups
   ansible.builtin.assert:
     that:
