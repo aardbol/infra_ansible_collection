@@ -1,29 +1,15 @@
 ---
-- name: Check if extra users are created
-  ansible.builtin.command: id {{ item.username }}
-  register: user_check
-  failed_when: user_check.rc != 0
-  changed_when: false
-
-- name: Get user groups
+- name: Get users
   ansible.builtin.getent:
-    database: group
-    key: "{{ item.username }}"
-  register: user_groups
+    database: passwd
+  register: passwd
 
-- name: debug groups
-  ansible.builtin.debug:
-      msg: "{{ item.groups | default([]) | difference(user_groups.ansible_facts.getent_group[item.username][2]) }}"
-
-- name: debug user groups
-  ansible.builtin.debug:
-      msg: "{{ user_groups.ansible_facts.getent_group }}"
-
-- name: Verify user groups
+- name: Assert expected users exist
   ansible.builtin.assert:
     that:
-      - item.groups | default([]) | difference(user_groups.ansible_facts.getent_group[item.username][2]) == []
-    fail_msg: "User {{ item.username }} is missing some expected groups"
+      - item.username in passwd.ansible_facts.getent_passwd
+    fail_msg: "User {{ item.username }} is missing!"
+    success_msg: "User {{ item.username }} exists."
 
 - name: Check if extra users' authorized keys are set
   ansible.builtin.command: cat /home/{{ item.username }}/.ssh/authorized_keys

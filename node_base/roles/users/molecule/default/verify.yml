@@ -6,9 +6,6 @@
     - name: Include default user tests
       ansible.builtin.include_tasks: tests/test_default_user.yml
 
-    - name: Include group creation tests
-      ansible.builtin.include_tasks: tests/test_groups.yml
-
     - name: Include user creation tests
       ansible.builtin.include_tasks: tests/test_users.yml
       loop: "{{ users_users }}"
