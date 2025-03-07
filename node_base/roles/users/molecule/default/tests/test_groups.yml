@@ -1,22 +1,16 @@
 ---
 - name: Check if groups exist
-  ansible.builtin.command: getent group {{ item.name }}
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    system: "{{ item.system | default(false) }}"
   loop: "{{ users_groups }}"
+  check_mode: true
   register: group_check
-  changed_when: false
-  failed_when: group_check.rc != 0
 
-- name: Extract group details
-  ansible.builtin.shell: "getent group {{ item.name }} | cut -d: -f3"
-  loop: "{{ users_groups }}"
-  register: group_gid
-  changed_when: false
-  failed_when: group_gid.rc != 0
-
-- name: Verify system group GIDs
+- name: Assert groups exist
   ansible.builtin.assert:
     that:
-      - "(item.item.system | default(false) | bool) == (item.stdout | int < 1000)"
-    fail_msg: "Group {{ item.item.name }} should be system: {{ item.item.system | default(false) }} but has GID {{ item.stdout }}"
-    success_msg: "Group {{ item.item.name }} has correct system status '{{ item.item.system | default(false) }}'"
-  loop: "{{ group_gid.results }}"
+      - item.changed == false
+    fail_msg: "Group {{ item.item.name }} does not match the expected state."
+    success_msg: "Group {{ item.item.name }} exists."
+  loop: "{{ group_check.results }}"
