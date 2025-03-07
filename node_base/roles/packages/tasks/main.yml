@@ -1,0 +1,57 @@
+---
+- name: Packages config
+  tags: packages
+  block:
+
+  - name: Packages | Remove packages
+    ansible.builtin.apt:
+      name: "{{ packages_remove }}"
+      state: absent
+      autoremove: "{{ packages_autoremove }}"
+    when: packages_remove | length > 0
+
+  - name: Packages | Purge packages
+    ansible.builtin.apt:
+      name: "{{ packages_purge }}"
+      state: absent
+      purge: true
+      autoremove: "{{ packages_autoremove }}"
+    when: packages_purge | length > 0
+
+  - name: Packages | Add pip to installation list
+    ansible.builtin.set_fact:
+      packages_install: "{{ packages_install + _packages_pip_name }}"
+    when: packages_pip_install | length > 0
+
+  - name: Packages | Install packages
+    ansible.builtin.apt:
+      name: "{{ packages_install }}"
+      update_cache: true
+    when: packages_install | length > 0
+
+  - name: Packages | Install pip packages
+    ansible.builtin.pip:
+      name: "{{ packages_pip_install.names }}"
+      virtualenv: "{{ packages_pip_install.virtualenv | default(omit) }}"
+      extra_args: "{{ packages_pip_install.extra_args | default(omit) }}"
+      state: "{{ packages_pip_install.state | default('present') }}"
+      break_system_packages: "{{ packages_pip_break_system_packages }}"
+    when: packages_pip_install.names | length > 0
+
+  - name: Packages | Install pip packages from requirements file
+    ansible.builtin.pip:
+      requirements: "{{ packages_pip_install.file }}"
+      virtualenv: "{{ packages_pip_install.virtualenv | default(omit) }}"
+      extra_args: "{{ packages_pip_install.extra_args | default(omit) }}"
+      state: "{{ packages_pip_install.state | default('present') }}"
+      break_system_packages: "{{ packages_pip_break_system_packages }}"
+    when: packages_pip_install.file is defined
+
+  - name: Packages | Upgrade all apt packages and remove unused ones
+    ansible.builtin.apt:
+      upgrade: full
+      force_apt_get: true
+      autoremove: "{{ packages_autoremove }}"
+    async: "{{ ansible_check_mode | ternary(0, 1200) }}"
+    poll: 5
+    when: packages_auto_upgrade

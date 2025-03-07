@@ -1,0 +1,15 @@
+---
+packages_install:
+  - nftables
+  - zstd
+  - rsync
+
+packages_pip_install:
+  names:
+    - "awscli==1.38.7"
+
+packages_remove:
+  - ufw
+
+packages_purge:
+  - snapd

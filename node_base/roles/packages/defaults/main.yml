@@ -1,0 +1,19 @@
+---
+# Auto upgrade installed packages?
+packages_auto_upgrade: false
+
+packages_remove: []
+packages_purge: []
+packages_install: []
+
+packages_pip_install: []
+#  names: []        # List of package names in pip format, e.g. "awscli==1.38.8", if not using a requirements file
+#  file: ""         # Path to a requirements file, if not using a list of package names
+#  state: ""        # Optional, state of the package, default is "present"
+#  extra_args: ""   # Optional, Extra arguments to pass to pip
+#  virtualenv: ""   # Optional, path to a virtualenv
+
+packages_pip_break_system_packages: false
+
+# Automatically remove dangling APT packages
+packages_autoremove: true

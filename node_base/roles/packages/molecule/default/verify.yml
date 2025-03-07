@@ -1,0 +1,24 @@
+---
+- name: Verify packages installation
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if pip is installed
+      ansible.builtin.command: pip --version
+      register: pip_installed
+      changed_when: false
+      failed_when: pip_installed.rc != 0
+
+    - name: Check and assert packages are installed
+      ansible.builtin.shell: dpkg -l | grep '{{ item }}'
+      register: package_check
+      ignore_errors: true
+      changed_when: false
+      loop: "{{ packages_install }}"
+
+    - name: Assert packages are installed
+      ansible.builtin.assert:
+        that:
+          - item.rc == 0
+        fail_msg: "Package {{ item.item }} is not installed"
+      loop: "{{ package_check.results }}"

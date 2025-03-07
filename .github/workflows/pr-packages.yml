@@ -1,0 +1,21 @@
+name: check PR (packages)
+
+on:
+  pull_request:
+    paths:
+      - node_base/roles/packages/**
+      - .github/**
+  # TODO: remove when enforcing PRs
+  push:
+    branches:
+      - main
+    paths:
+      - node_base/roles/packages/**
+      - .github/**
+
+jobs:
+  run-molecule-tests:
+    uses: ./.github/workflows/reusable-molecule.yml
+    with:
+      collection-name: node_base
+      role-name: packages
