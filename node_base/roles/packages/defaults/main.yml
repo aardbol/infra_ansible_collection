@@ -3,6 +3,7 @@
 packages_auto_upgrade: false
 
 packages_remove: []
+# Purge removes everything, including config files
 packages_purge: []
 packages_install: []
 
