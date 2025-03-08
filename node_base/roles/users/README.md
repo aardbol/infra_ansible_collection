@@ -10,6 +10,7 @@ Features:
 - manage (system) groups
 - manage authorized keys for users
 - set nopasswd sudo for sudo group
+- enable linger for a user, so they can run systemd services without being logged in
 
 See `defaults/main.yml` for more documentation on usage.
 
