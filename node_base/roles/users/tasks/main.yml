@@ -77,7 +77,7 @@
       exclusive: true
     loop: "{{ _users_data }}"
     ignore_errors: "{{ ansible_check_mode }}"
-    when: not (item.system | default(false)) and not item.state == 'absent'
+    when: not (item.system | default(false)) and (item.state | default('present') != 'absent')
 
   # Lingering is a systemd feature that keeps a user's session running even after they log out
   # This is useful for services that need to run as a user, like a container run with podman
