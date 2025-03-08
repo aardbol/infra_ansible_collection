@@ -18,6 +18,20 @@
       autoremove: "{{ packages_autoremove }}"
     when: packages_purge | length > 0
 
+  - name: Packages | Create custom keyring directory
+    ansible.builtin.file:
+      path: "{{ _packages_keyring_folder }}"
+      state: directory
+      mode: "0755"
+    when: packages_new_repositories | length > 0
+
+  - name: Packages | Add APT repositories
+    ansible.builtin.include_tasks: apt_repo.yml
+    loop: "{{ packages_new_repositories }}"
+    loop_control:
+      extended: true
+    when: packages_new_repositories | length > 0
+
   - name: Packages | Add pip to installation list
     ansible.builtin.set_fact:
       packages_install: "{{ packages_install + _packages_pip_name }}"

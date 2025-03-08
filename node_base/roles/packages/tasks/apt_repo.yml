@@ -1,0 +1,50 @@
+---
+- name: Packages | Ensure hash or keyfile has been given
+  ansible.builtin.fail:
+    msg: Either key or key_file must be provided for repo "{{ item.repo }}"
+  when: item.key is not defined and item.key_file is not defined
+
+- name: Packages | Create custom keyring directory
+  ansible.builtin.file:
+    path: "{{ _packages_keyring_folder }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Packages | Get APT key information
+  ansible.builtin.command: gpg --show-keys {{ _dest_keyring }}
+  register: gpg_output
+  changed_when: false
+  when: item.key_file is defined
+
+- name: Packages | Extract the key ID
+  ansible.builtin.set_fact:
+    key_id: "{{ gpg_output.stdout_lines[1] | trim }}"
+  when: item.key_file is defined
+
+- name: Packages | Set destination file name
+  ansible.builtin.set_fact:
+    _dest_keyring: "{{ _packages_keyring_folder }}/{{ item.key if item.key is defined else key_id }}.gpg"
+
+- name: Packages | Add APT key
+  ansible.builtin.apt_key:
+    id: "{{ item.key if item.key is defined else omit }}"
+    url: "{{ item.key_file if item.key_file is defined else omit }}"
+    keyring: "{{ _dest_keyring }}"
+    keyserver: "{{ packages_apt_keyserver if item.key is defined else omit }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Packages | Set restrictive permissions for key file
+  ansible.builtin.file:
+    path: "{{ _dest_keyring }}"
+    owner: root
+    group: root
+    mode: "0644"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Packages | Add APT repository
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by={{ _dest_keyring }}] {{ item.repo }}
+    state: "{{ item.state | default('present') }}"
+    update_cache: "{{ true if packages_update_cache and ansible_loop.last else false }}"

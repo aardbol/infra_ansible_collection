@@ -1,8 +1,8 @@
 ---
 packages_install:
   - nftables
-  - zstd
   - rsync
+  - ansible-core
 
 packages_pip_install:
   names:
@@ -13,3 +13,9 @@ packages_remove:
 
 packages_purge:
   - snapd
+
+packages_new_repositories:
+  - repo: http://ppa.launchpad.net/ansible/ansible/ubuntu jammy main
+    key: 93C4A3FD7BB9C367
+  - repo: https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/Debian_Unstable/ /
+    key_file: https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/Debian_Unstable/Release.key

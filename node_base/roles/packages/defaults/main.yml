@@ -1,5 +1,5 @@
 ---
-# Auto upgrade installed packages?
+# Auto upgrade installed packages when available?
 packages_auto_upgrade: false
 
 packages_remove: []
@@ -7,13 +7,27 @@ packages_purge: []
 packages_install: []
 
 packages_pip_install: []
-#  names: []        # List of package names in pip format, e.g. "awscli==1.38.8", if not using a requirements file
-#  file: ""         # Path to a requirements file, if not using a list of package names
-#  state: ""        # Optional, state of the package, default is "present"
-#  extra_args: ""   # Optional, Extra arguments to pass to pip
-#  virtualenv: ""   # Optional, path to a virtualenv
+#  - names: []        # List of package names in pip format, e.g. "awscli==1.38.8", if not using a requirements file
+#    file: ""         # Path to a requirements file, if not using a list of package names
+#    state: ""        # Optional, state of the package, default is "present"
+#    extra_args: ""   # Optional, Extra arguments to pass to pip
+#    virtualenv: ""   # Optional, path to a virtualenv
 
 packages_pip_break_system_packages: false
 
 # Automatically remove dangling APT packages
 packages_autoremove: true
+
+packages_apt_keyserver: keyserver.ubuntu.com
+
+# A list of repositories that use the given APT key for verification
+# This is a more secure way to add APT repositories than the default apt_repository module
+# Note: it would be more efficient to enable update_cache on the last repository in the list
+packages_new_repositories: []
+#  - repo: ""         # Repository URL
+#    key: ""          # APT key ID, if file is not provided
+#    key_file: ""     # URL to a key file, if key is not provided
+#    state: ""        # Optional, state of the repository, default is "present"
+
+# Update the cache after the last custom repo has been added?
+packages_update_cache: true

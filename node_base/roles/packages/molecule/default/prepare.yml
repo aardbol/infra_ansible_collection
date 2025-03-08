@@ -5,6 +5,8 @@
   tasks:
     - name: Ensure dependencies are installed
       ansible.builtin.apt:
+        update_cache: true
         name:
           - sudo
           - python3
+          - gnupg
