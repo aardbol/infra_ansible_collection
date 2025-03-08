@@ -37,7 +37,6 @@ See `defaults/main.yml`
   vars:
     users_groups:
       - name: ssh
-        system: true
     users_users:
       - name: user1
         groups: [sudo]
