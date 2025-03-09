@@ -1,0 +1,30 @@
+---
+# Change the hostname to match `inventory_hostname`?
+config_update_hostname: false
+
+# Change the settings in systemd config files
+# The key is the filename in /etc/systemd/ and the value is the multistring value of content of the file
+config_systemd_configurations_blocks: {}
+#  journald.conf: |
+#    SystemMaxUse=250M
+#    Storage=persistent
+#    ForwardToSyslog=no
+#    ForwardToKMsg=no
+#    Audit=yes
+#  sleep.conf: |
+#    AllowSuspend=no
+#    AllowHybridSleep=no
+#    AllowHibernation=no
+#  resolved.conf: |
+#    DNS=1.1.1.1 2606:4700:4700::1111
+#    FallbackDNS=1.0.0.1 2606:4700:4700::1001
+#    DNSOverTLS=yes
+#    DNSSEC=no
+
+# Mount secondary drives. This will also resize the filesystem to the full disk size if supported
+config_mount_points: []
+#  - dev: ""       # Path to the device, e.g. /dev/nvme0n1
+#    type: ""      # Filesystem type, e.g. ext4
+#    mount: ""     # Mountpoint, e.g. /var/lib/docker
+#    opts: ""      # Optional, mount options. Default: "defaults"
+#    resize: bool  # Optional, resize the filesystem to the full disk size if supported. Default: true

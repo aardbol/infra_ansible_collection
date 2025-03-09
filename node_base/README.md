@@ -6,6 +6,7 @@ Roles:
 - [users](roles/users/README.md) - manage users and groups and authorized keys
 - [packages](roles/packages/README.md) - manage system/pip packages and updates
 - [restart](roles/restart/README.md) - restart a server (after updates)
+- [config](roles/config/README.md) - configure systemd and mountpoints
 
 ## Requirements
 

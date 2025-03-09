@@ -1,0 +1,20 @@
+---
+- name: Config | Format the to be mounted drives
+  community.general.filesystem:
+    fstype: "{{ item.type }}"
+    dev: "{{ item.dev }}"
+    resizefs: "{{ item.resize | default(true) }}"
+  ignore_errors: true
+
+- name: Config | Create the mountpoint folders
+  ansible.builtin.file:
+    path: "{{ item.mount }}"
+    state: directory
+
+- name: Config | Mount drives
+  ansible.posix.mount:
+    state: mounted
+    opts: "{{ item.opts | default('defaults') }}"
+    path: "{{ item.mount }}"
+    fstype: "{{ item.type }}"
+    src: "{{ item.dev }}"
