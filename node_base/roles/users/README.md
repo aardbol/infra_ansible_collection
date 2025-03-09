@@ -1,5 +1,3 @@
-# Users Role
-
 ## Overview
 
 The `users` role is designed to manage users and groups on a system. This role allows you to create, modify, and delete user accounts and groups, ensuring that the system's user management is consistent and secure.
@@ -13,14 +11,6 @@ Features:
 - enable linger for a user, so they can run systemd services without being logged in
 
 See `defaults/main.yml` for more documentation on usage.
-
-## Requirements
-
-- Supported platforms: Debian, Ubuntu
-
-## Role Variables
-
-See `defaults/main.yml`
 
 ## Dependencies
 

@@ -1,5 +1,3 @@
-# Packages Role
-
 ## Overview
 
 The `packages` role is designed to manage system and pip packages.
@@ -11,14 +9,6 @@ Features:
 - add custom APT repos securely, compared to builtin `apt_repository` module
 
 See `defaults/main.yml` for more documentation on usage.
-
-## Requirements
-
-- Supported platforms: Debian, Ubuntu
-
-## Role Variables
-
-See `defaults/main.yml`
 
 ## Dependencies
 

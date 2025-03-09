@@ -1,0 +1,50 @@
+---
+- name: Restart | Check reboot situation
+  tags: [check-restart, restart]
+  block:
+
+  - name: Restart | Is a reboot is pending? (changed = yes)
+    ansible.builtin.stat:
+      path: /run/reboot-required
+    register: _nb_reboot_required
+    changed_when: _nb_reboot_required.stat.exists
+    tags: check-restart
+
+  - name: Restart | Get packages that require a restart
+    ansible.builtin.slurp:
+      src: /var/run/reboot-required.pkgs
+    register: _nb_reboot_required_packages
+    when: _nb_reboot_required.stat.exists
+    tags: check-restart
+
+  - name: Restart | Show packages that require a restart
+    ansible.builtin.debug:
+      msg: "{{ _nb_reboot_required_packages.content | b64decode }}"
+    when: _nb_reboot_required.stat.exists
+    tags: check-restart
+
+  - name: Restart | Perform restart
+    tags: [restart, never]
+    block:
+
+    - name: Restart | Prompt user
+      ansible.builtin.pause:
+        prompt: Are you sure you want to perform a restart? [y/N]
+      register: _nb_restart_prompt
+      when:
+        - not node_base_headless_mode
+        - _nb_reboot_required.stat.exists or not node_base_restart_when_pending_upgrades
+
+    - name: Restart | Set restart prompt variable
+      ansible.builtin.set_fact:
+        _nb_restart_prompt: "{{ 'y' if node_base_headless_mode else _nb_restart_prompt.user_input | default('no') | lower }}"
+      run_once: true
+
+    - name: Restart | Restart the instance
+      ansible.builtin.reboot:
+        msg: Restart initiated by Ansible for {{ inventory_hostname }}
+        test_command: "{{ node_base_restart_test_command }}"
+        pre_reboot_delay: "{{ node_base_restart_pre_reboot_delay }}"
+        post_reboot_delay: "{{ node_base_restart_post_reboot_delay }}"
+        reboot_timeout: "{{ node_base_restart_timeout }}"
+      when: _nb_restart_prompt == 'y' and (not node_base_restart_when_pending_upgrades or _nb_reboot_required.stat.exists)

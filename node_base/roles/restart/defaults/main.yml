@@ -1,0 +1,17 @@
+---
+# Disable prompts (e.g. when in a pipeline)
+node_base_headless_mode: false
+
+# Any custom command to verify if a restart has been completed.
+node_base_restart_test_command: uptime
+
+# Only support restarting of the instance if a reboot is required after packages upgrades, i.e. /run/reboot-required exists
+# Setting this to false is also a means to force a reboot, and in interactive mode after user also confirmed with "y"
+node_base_restart_when_pending_upgrades: true
+
+# Seconds to wait before reboot. Passed as a parameter to the reboot command.
+node_base_restart_pre_reboot_delay: 0
+# Seconds to wait after the reboot command was successful before attempting to validate the system rebooted successfully.
+node_base_restart_post_reboot_delay: 0
+# Maximum seconds to wait for machine to reboot and respond to a test command.
+node_base_restart_timeout: 600
