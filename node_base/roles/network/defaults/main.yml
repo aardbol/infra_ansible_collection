@@ -1,0 +1,39 @@
+---
+# Global switch to disable Linux firewalling, in case e.g. AWS SGs are used instead
+network_disable_firewall: false
+
+# IPv6 support. Only dual-stack is supported at this time.
+network_ipv6_support: false
+
+# Firewall default policies
+network_forward_policy: drop
+network_input_policy: drop
+network_output_policy: accept
+
+network_allow_icmp: true
+network_allow_icmpv6: "{{ network_allow_icmp and network_ipv6_support }}"
+
+# ICMP(v6) source address whitelists. If left empty, all sources are allowed.
+network_icmp_whitelist: []
+network_icmpv6_whitelist: []
+
+# Alternatively, when non-whitelisted ICMP traffic, an ICMP rate limit (e.g., "10/second") can be set.
+# Used for both IPv4 and IPv6.
+network_icmp_rate_limit: ""
+
+network_allow_ssh_ipv6_support: "{{ network_ipv6_support }}"
+
+# Which IPv4 are allowed to connect via SSH. When left empty, a warning will be shown to remind the user to set this.
+network_allow_ssh_ipv4: []
+
+# Which IPv6 are allowed to connect via SSH. When left empty, a warning will be shown to remind the user to set this.
+network_allow_ssh_ipv6: []
+
+# Allow only SSH connections for specific user groups. When left empty, all groups are allowed.
+network_ssh_allow_groups: []
+
+# Will disable password authentication when set to false or vice versa
+network_ssh_password_authentication: false
+
+# Will change the default SSH server port and firewall rule
+network_ssh_port: 22

@@ -9,3 +9,4 @@ This repository contains collections for devops/infra people to configure and ma
   - [packages](node_base/roles/packages/README.md) - manage system/pip packages and updates
   - [restart](node_base/roles/restart/README.md) - restart a server (after updates)
   - [config](node_base/roles/config/README.md) - configure systemd and mountpoints
+  - [network](node_base/roles/network/README.md) - manage firewall with nftables and SSH configuration

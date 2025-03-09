@@ -1,0 +1,45 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+{% if not network_disable_firewall -%}
+table inet filter {
+        chain input {
+                type filter hook input priority 0; policy {{ network_input_policy }};
+
+                ct state invalid drop comment "early drop of invalid connections"
+                ct state {established, related} accept comment "allow tracked connections"
+                iifname lo accept comment "allow from loopback"
+
+                {% if network_allow_icmp and network_icmp_whitelist | length > 0 -%}
+                ip saddr { {{ network_icmp_whitelist | join(',') }} } protocol icmp accept comment "allow icmp from whitelisted IPs"
+                {% elif network_allow_icmp and network_icmp_rate_limit -%}
+                ip protocol icmp limit rate {{ network_icmp_rate_limit }} accept comment "allow icmp with rate limiting"
+                {% elif network_allow_icmp -%}
+                ip protocol icmp accept comment "allow icmp"
+                {% endif -%}
+                {% if network_allow_icmpv6 and network_icmpv6_whitelist | length > 0 -%}
+                ip6 saddr { {{ network_icmpv6_whitelist | join(',') }} } meta l4proto ipv6-icmp accept comment "allow icmpv6 from whitelisted IPs"
+                {% elif network_allow_icmpv6 and network_icmp_rate_limit -%}
+                meta l4proto ipv6-icmp limit rate {{ network_icmp_rate_limit }} accept comment "allow icmpv6 with rate limiting"
+                {% elif network_allow_icmpv6 -%}
+                meta l4proto ipv6-icmp accept comment "allow icmpv6"
+                {% endif -%}
+
+                {% if network_allow_ssh_ipv4 | length > 0 -%}
+                ip saddr { {{ network_allow_ssh_ipv4 | join(',') }} } tcp dport {{ network_ssh_port }} counter accept comment "allowed SSH IPv4"
+                {% endif -%}
+                {% if network_allow_ssh_ipv6_support and network_allow_ssh_ipv6 | length > 0 -%}
+                ip6 saddr { {{ network_allow_ssh_ipv6 | join(',') }} } tcp dport {{ network_ssh_port }} counter accept comment "allowed SSH IPv6"
+                {% endif -%}
+        }
+        chain forward {
+                type filter hook forward priority 0; policy {{ network_forward_policy }};
+        }
+        chain output {
+                type filter hook output priority 0; policy {{ network_output_policy }};
+        }
+}
+
+include "/etc/nftables.d/*.nft"
+{% endif -%}

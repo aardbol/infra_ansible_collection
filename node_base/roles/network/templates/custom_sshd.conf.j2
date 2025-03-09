@@ -1,0 +1,9 @@
+PubkeyAuthentication yes
+
+PasswordAuthentication {{ 'no' if not network_ssh_password_authentication else 'yes' }}
+
+{% if network_ssh_allow_groups | length > 0 -%}
+AllowGroups {{ network_ssh_allow_groups | join(' ') }}
+{% endif -%}
+
+Port {{ network_ssh_port }}
