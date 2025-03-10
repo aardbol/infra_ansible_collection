@@ -21,7 +21,7 @@ Features:
     - role: config
   vars:
     node_base_update_hostname: true
-    config_systemd_configurations_blocks: |
+    config_systemd_configurations_blocks:
       journald.conf: |
         SystemMaxUse=250M
         Storage=persistent
