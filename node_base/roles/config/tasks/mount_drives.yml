@@ -4,12 +4,16 @@
     fstype: "{{ item.type }}"
     dev: "{{ item.dev }}"
     resizefs: "{{ item.resize | default(true) }}"
-  ignore_errors: true
+  register: _config_format_result
+  failed_when: _config_format_result.rc != 0 and 'already formatted' not in _config_format_result.stderr
 
 - name: Config | Create the mountpoint folders
   ansible.builtin.file:
     path: "{{ item.mount }}"
     state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
 
 - name: Config | Mount drives
   ansible.posix.mount:

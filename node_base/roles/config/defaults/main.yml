@@ -28,3 +28,6 @@ config_mount_points: []
 #    mount: ""     # Mountpoint, e.g. /var/lib/docker
 #    opts: ""      # Optional, mount options. Default: "defaults"
 #    resize: bool  # Optional, resize the filesystem to the full disk size if supported. Default: true
+#    owner: ""     # Optional, owner of the mountpoint. Default: root
+#    group: ""     # Optional, group of the mountpoint. Default: root
+#    mode: ""      # Optional, mode of the mountpoint. Default: 0755
