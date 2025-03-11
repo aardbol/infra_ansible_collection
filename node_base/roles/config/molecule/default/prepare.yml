@@ -1,0 +1,10 @@
+---
+- name: Prepare test environment
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure dependencies are installed
+      ansible.builtin.apt:
+        name:
+          - sudo
+          - python3

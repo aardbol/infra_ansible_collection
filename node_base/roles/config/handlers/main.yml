@@ -5,6 +5,8 @@
     state: restarted
     daemon_reload: true
   listen: restart systemd
+  # Our testing container image doesn't contain systemd-resolved
+  when: running_in_molecule is not defined
 
 - name: Config | Restart journald
   ansible.builtin.systemd_service:

@@ -1,0 +1,8 @@
+---
+- name: Apply the users role
+  hosts: all
+  gather_facts: true
+  vars:
+    running_in_molecule: true
+  roles:
+    - role: ../../../config

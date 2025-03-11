@@ -1,0 +1,14 @@
+---
+# In our testing container, we're limited to just testing the systemd configuration changes.
+# TODO maybe: test hostname change and mounts in external VM
+config_systemd_configurations_blocks:
+  journald.conf: |
+    SystemMaxUse=250M
+    Storage=persistent
+    ForwardToSyslog=no
+    ForwardToKMsg=no
+    Audit=yes
+  sleep.conf: |
+    AllowSuspend=no
+    AllowHybridSleep=no
+    AllowHibernation=no

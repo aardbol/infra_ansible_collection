@@ -1,0 +1,15 @@
+---
+- name: Verify role application
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Slurp journald.conf
+      ansible.builtin.slurp:
+        src: /etc/systemd/journald.conf
+      register: journald_conf_content
+
+    - name: Assert that Storage=persistent is present in journald.conf
+      ansible.builtin.assert:
+        that:
+          - "'Storage=persistent' in journald_conf_content['content'] | b64decode"
+        msg: "The line 'Storage=persistent' is not present in journald.conf."
