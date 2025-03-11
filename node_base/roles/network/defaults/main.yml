@@ -24,9 +24,11 @@ network_icmp_rate_limit: ""
 network_allow_ssh_ipv6_support: "{{ network_ipv6_support }}"
 
 # Which IPv4 are allowed to connect via SSH. When left empty, a warning will be shown to remind the user to set this.
+# Set to ['0.0.0.0/0'] to allow all (not recommended).
 network_allow_ssh_ipv4: []
 
 # Which IPv6 are allowed to connect via SSH. When left empty, a warning will be shown to remind the user to set this.
+# Set to ['::/0'] to allow all (not recommended).
 network_allow_ssh_ipv6: []
 
 # Allow only SSH connections for specific user groups. When left empty, all groups are allowed.

@@ -5,7 +5,7 @@ The `config` role is used to configure the system. It can make changes to system
 Features:
 - set the hostname based on `inventory_hostname`
 - configure systemd services
-- configure mountpoints: resize, mount them and add to fstab
+- configure mountpoints: resize, permissions, mount them and add to fstab
 
 ## Dependencies
 
