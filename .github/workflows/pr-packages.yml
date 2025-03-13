@@ -6,6 +6,7 @@ on:
       - node_base/roles/packages/**
       - .github/**
       - '!.github/workflows/pri-*.yml'
+      - '!.github/workflows/reusablei-*.yml'
   # TODO: remove when enforcing PRs
   push:
     branches:
@@ -14,6 +15,7 @@ on:
       - node_base/roles/packages/**
       - .github/**
       - '!.github/workflows/pri-*.yml'
+      - '!.github/workflows/reusablei-*.yml'
 
 jobs:
   run-molecule-tests:

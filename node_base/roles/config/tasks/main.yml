@@ -21,6 +21,7 @@
       dest: "{{ item }}"
       owner: root
       group: root
+      mode: "0644"
     loop:
       - /etc/issue
       - /etc/issue.net
@@ -32,9 +33,10 @@
         This system is managed by Ansible.
         All changes will be overwritten.
         !! Authorized access only !!
+      dest: "{{ item }}"
       owner: root
       group: root
-      dest: "{{ item }}"
+      mode: "0644"
     loop:
       - /etc/issue
       - /etc/issue.net
