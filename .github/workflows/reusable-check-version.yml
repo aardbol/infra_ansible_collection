@@ -32,6 +32,9 @@ jobs:
           main_version=$(grep 'version:' main/galaxy.yml | awk '{print $2}')
           echo "main_version=$main_version" >> $GITHUB_ENV
 
+      - name: Install nodejs dependencies
+        run: npm install semver
+
       - name: Validate and compare versions (SemVer)
         if: ${{ inputs.compare-versions }}
         uses: actions/github-script@v7
