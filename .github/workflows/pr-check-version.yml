@@ -1,0 +1,15 @@
+name: Check collection version
+
+on:
+  pull_request:
+    paths:
+      - node_base/**
+  push:
+    branches:
+      - main
+    paths:
+      - node_base/**
+
+jobs:
+  check-version:
+    uses: ./.github/workflows/reusable-check-version.yml

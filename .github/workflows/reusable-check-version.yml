@@ -1,0 +1,62 @@
+on:
+  workflow_call:
+    inputs:
+      compare-versions:
+        description: Compare main branch version with the new version
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  check-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout main branch
+        if: ${{ inputs.compare-versions }}
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main/
+
+      - name: Get current version
+        run: |
+          current_version=$(grep 'version:' galaxy.yml | awk '{print $2}')
+          echo "current_version=$current_version" >> $GITHUB_ENV
+
+      - name: Get main branch version
+        if: ${{ inputs.compare-versions }}
+        run: |
+          main_version=$(grep 'version:' main/galaxy.yml | awk '{print $2}')
+          echo "main_version=$main_version" >> $GITHUB_ENV
+
+      - name: Validate and compare versions (SemVer)
+        if: ${{ inputs.compare-versions }}
+        uses: actions/github-script@v7
+        env:
+          CURRENT_VERSION: ${{ env.current_version }}
+          MAIN_VERSION: ${{ env.main_version }}
+        with:
+          script: |
+            const semver = require('semver');
+            const { CURRENT_VERSION, MAIN_VERSION } = process.env;
+
+            if (!CURRENT_VERSION) {
+              core.setFailed('No version found in current branch galaxy.yml.');
+            }
+            if (!MAIN_VERSION) {
+              core.setFailed('No version found in main branch galaxy.yml.');
+            }
+
+            if (!semver.valid(CURRENT_VERSION)) {
+              core.setFailed(`Invalid current version: "${CURRENT_VERSION}". Use SemVer (e.g., 1.2.3).`);
+            }
+            if (!semver.valid(MAIN_VERSION)) {
+              core.setFailed(`Invalid main branch version: "${MAIN_VERSION}". Use SemVer (e.g., 1.2.3).`);
+            }
+
+            if (!semver.gt(CURRENT_VERSION, MAIN_VERSION)) {
+              core.setFailed(`Version ${CURRENT_VERSION} must be greater than ${MAIN_VERSION}. Bump the version in galaxy.yml.`);
+            }
