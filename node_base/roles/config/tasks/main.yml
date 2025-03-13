@@ -15,6 +15,27 @@
       regexp: '^127\.0\.0\.1\s+{{ inventory_hostname }}'
     when: config_update_hostname
 
+  - name: Config | Set /etc/issue(.net) to custom file
+    ansible.builtin.copy:
+      src: "{{ config_issue_custom_file }}"
+      dest: "{{ item }}"
+    loop:
+      - /etc/issue
+      - /etc/issue.net
+    when: config_update_issue and config_issue_custom_file
+
+  - name: Config | Set /etc/issues(.net)
+    ansible.builtin.copy:
+      content: |
+        This system is managed by Ansible.
+        All changes will be overwritten.
+        !! Authorized access only !!
+      dest: "{{ item }}"
+    loop:
+      - /etc/issue
+      - /etc/issue.net
+    when: config_update_issue and not config_issue_custom_file
+
   - name: Config | Configure systemd
     ansible.builtin.blockinfile:
       path: "/etc/systemd/{{ item.key }}"

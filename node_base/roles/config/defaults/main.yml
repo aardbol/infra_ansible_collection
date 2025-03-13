@@ -2,6 +2,11 @@
 # Change the hostname to match `inventory_hostname`?
 config_update_hostname: false
 
+# Change the content of /etc/issue with a disclaimer?
+config_update_issue: false
+# Absolute path to a custom file to use as /etc/issue and /etc/issue.net
+config_issue_custom_file: ""
+
 # Change the settings in systemd config files
 # The key is the filename in /etc/systemd/ and the value is the multistring value of content of the file
 config_systemd_configurations_blocks: {}
