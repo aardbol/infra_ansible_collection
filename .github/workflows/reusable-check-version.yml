@@ -24,12 +24,14 @@ jobs:
       - name: Get current version
         run: |
           current_version=$(grep 'version:' galaxy.yml | awk '{print $2}')
+          echo "Current version: $current_version"
           echo "current_version=$current_version" >> $GITHUB_ENV
 
       - name: Get main branch version
         if: ${{ inputs.compare-versions }}
         run: |
           main_version=$(grep 'version:' main/galaxy.yml | awk '{print $2}')
+          echo "Main branch version: $main_version"
           echo "main_version=$main_version" >> $GITHUB_ENV
 
       - name: Install nodejs dependencies
@@ -46,18 +48,21 @@ jobs:
             const semver = require('semver');
             const { CURRENT_VERSION, MAIN_VERSION } = process.env;
 
-            if (!CURRENT_VERSION) {
+            if (!CURRENT_VERSION || CURRENT_VERSION.trim() === '') {
               core.setFailed('No version found in current branch galaxy.yml.');
             }
-            if (!MAIN_VERSION) {
+            if (!MAIN_VERSION || MAIN_VERSION.trim() === '') {
               core.setFailed('No version found in main branch galaxy.yml.');
+              return;
             }
 
             if (!semver.valid(CURRENT_VERSION)) {
               core.setFailed(`Invalid current version: "${CURRENT_VERSION}". Use SemVer (e.g., 1.2.3).`);
+              return;
             }
             if (!semver.valid(MAIN_VERSION)) {
               core.setFailed(`Invalid main branch version: "${MAIN_VERSION}". Use SemVer (e.g., 1.2.3).`);
+              return;
             }
 
             if (!semver.gt(CURRENT_VERSION, MAIN_VERSION)) {

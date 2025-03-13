@@ -19,6 +19,8 @@
     ansible.builtin.copy:
       src: "{{ config_issue_custom_file }}"
       dest: "{{ item }}"
+      owner: root
+      group: root
     loop:
       - /etc/issue
       - /etc/issue.net
@@ -30,6 +32,8 @@
         This system is managed by Ansible.
         All changes will be overwritten.
         !! Authorized access only !!
+      owner: root
+      group: root
       dest: "{{ item }}"
     loop:
       - /etc/issue
