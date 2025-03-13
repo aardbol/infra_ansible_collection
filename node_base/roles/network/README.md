@@ -5,6 +5,9 @@ The `network` role is designed to manage firewall with nftables and SSH configur
 Note: as a security measure, you must explicitly define `network_allow_ssh_ipv4` to whitelist IPs for SSH connections and
 `network_allow_ssh_ipv6` in case you also enable IPv6 support. 
 
+You can define custom nftables rules by creating *.nft files in the /etc/nftables.d/ directory and running 
+`sudo nft -f /etc/nftables.conf` to apply them or restarting the systemd unit.
+
 Features:
 - manage firewall rules with nftables: default policies, icmp(v6), ssh via ipv4 and ipv6
 - disable firewalling completely (e.g. when using AWS Security Groups instead)
@@ -27,5 +30,5 @@ See `defaults/main.yml` for more documentation on usage.
     network_ipv6_support: true
     network_allow_ssh_ipv4: [0.0.0.0/0]
     network_allow_ssh_ipv6: [::/0]
-    network_ssh_allow_groups: [ssh]
+    network_ssh_allow_groups: [ssh] # Don't forget to define this group first
 ```
