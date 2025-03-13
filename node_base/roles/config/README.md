@@ -6,6 +6,7 @@ Features:
 - set the hostname based on `inventory_hostname`
 - configure systemd services
 - configure mountpoints: resize, permissions, mount them and add to fstab
+- set /etc/issue and /etc/issues.net
 
 ## Dependencies
 
@@ -20,7 +21,8 @@ Features:
   roles:
     - role: config
   vars:
-    node_base_update_hostname: true
+    config_update_hostname: true
+    config_update_issue: true
     config_systemd_configurations_blocks:
       journald.conf: |
         SystemMaxUse=250M
