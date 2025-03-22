@@ -1,23 +1,43 @@
 ---
-# Global switch to disable Linux firewalling, in case e.g. AWS SGs are used instead
+### Firewall
+
+# Global switch to disable Linux firewall, in case e.g. AWS SGs are used instead
+# Will disable existing rules and remove any common firewall software
 network_disable_firewall: false
 
+# Which firewall to use. Currently nftables and firewalld are supported
+# Nftables allows you to use a file-based configuration. For best compatibility with docker, firewall rules should
+# be managed manually (via ansible) and iptables should be disabled in docker's daemon.json.
+# Firewalld allows you to use ansible's firewalld module and has better support for docker.
+network_firewall_type: nftables
+
+# Remove unused tools (ufw)
+network_firewall_remove_unused_tools: true
+
 # IPv6 support. Only dual-stack is supported at this time.
+# Note that firewalld already enables IPv6 internal traffic by default, well as ICMPv6. This rule enables IPv6 support
+# for any customer rules like SSH and any future supported services.
 network_ipv6_support: false
 
-# Firewall default policies
+# Nftables: Firewall default policies when using nftables.
+# When using firewalld, the default zone will be set.
 network_forward_policy: drop
 network_input_policy: drop
 network_output_policy: accept
 
+# Default zone when using firewalld
+network_firewalld_default_zone: public
+
+# Nftables: Allow all ICMP traffic. If set to false, ICMP traffic will be blocked.
+# Has no effect on firewalld, as it allows all ICMP(v6) traffic by default.
 network_allow_icmp: true
 network_allow_icmpv6: "{{ network_allow_icmp and network_ipv6_support }}"
 
-# ICMP(v6) source address whitelists. If left empty, all sources are allowed.
+# Nftables: ICMP(v6) source address whitelists. If left empty, all sources are allowed.
 network_icmp_whitelist: []
 network_icmpv6_whitelist: []
 
-# Alternatively, when non-whitelisted ICMP traffic, an ICMP rate limit (e.g., "10/second") can be set.
+# Nftables: Alternatively, when non-whitelisted ICMP traffic, an ICMP rate limit (e.g., "10/second") can be set.
 # Used for both IPv4 and IPv6.
 network_icmp_rate_limit: ""
 
@@ -30,6 +50,8 @@ network_allow_ssh_ipv4: []
 # Which IPv6 are allowed to connect via SSH. When left empty, a warning will be shown to remind the user to set this.
 # Set to ['::/0'] to allow all (not recommended).
 network_allow_ssh_ipv6: []
+
+### SSH
 
 # Allow only SSH connections for specific user groups. When left empty, all groups are allowed.
 network_ssh_allow_groups: []

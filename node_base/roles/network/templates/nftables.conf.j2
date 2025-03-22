@@ -26,10 +26,8 @@ table inet filter {
                 meta l4proto ipv6-icmp accept comment "allow icmpv6"
                 {% endif -%}
 
-                {% if network_allow_ssh_ipv4 | length > 0 -%}
                 ip saddr { {{ network_allow_ssh_ipv4 | join(',') }} } tcp dport {{ network_ssh_port }} counter accept comment "allowed SSH IPv4"
-                {% endif -%}
-                {% if network_allow_ssh_ipv6_support and network_allow_ssh_ipv6 | length > 0 -%}
+                {% if network_allow_ssh_ipv6_support -%}
                 ip6 saddr { {{ network_allow_ssh_ipv6 | join(',') }} } tcp dport {{ network_ssh_port }} counter accept comment "allowed SSH IPv6"
                 {% endif -%}
         }

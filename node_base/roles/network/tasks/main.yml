@@ -6,26 +6,16 @@
   - name: Network | Ensure SSH allowlist is explicitly set
     ansible.builtin.fail:
       msg: "You must explicitly define network_allow_ssh_ipv4. Use ['0.0.0.0/0'] if you want to allow all."
-    when: network_allow_ssh_ipv4 | length == 0
+    when:
+      - network_allow_ssh_ipv4 | length == 0
+      - not network_disable_firewall
 
   - name: Network | Ensure SSHv6 allowlist is explicitly set
     ansible.builtin.fail:
       msg: "You must explicitly define network_allow_ssh_ipv6. Use ['::/0'] if you want to allow all."
-    when: network_allow_ssh_ipv6_support and network_allow_ssh_ipv6 | length == 0
-
-  - name: Network | Create /etc/nftables.d folder
-    ansible.builtin.file:
-      path: /etc/nftables.d
-      state: directory
-      mode: "0755"
-
-  - name: Network | Copy nftables.conf
-    ansible.builtin.template:
-      src: nftables.conf.j2
-      dest: /etc/nftables.conf
-      mode: "0755"
-      validate: nft -c -f %s
-    notify: apply nft
+    when:
+      - network_allow_ssh_ipv6_support and network_allow_ssh_ipv6 | length == 0
+      - not network_disable_firewall
 
   - name: Network | Get service facts
     ansible.builtin.service_facts:
@@ -53,11 +43,36 @@
         name: ufw
         enabled: false
         state: stopped
-      notify: apply nft
+      notify: apply fw
 
-    # Activate Nftables already, so the server will not run without a firewall too long
-    - meta: flush_handlers
 
+  - name: Network | Remove firewall software
+    ansible.builtin.apt:
+      name: "{{ firewall_packages }}"
+      state: absent
+      purge: true
+    when: network_disable_firewall or network_firewall_remove_unused_tools
+    vars:
+      firewall_packages: >-
+        {% if network_disable_firewall %}
+        - firewalld
+        - nftables
+        - ufw
+        {% else %}
+        ufw
+        {% endif %}
+
+  - name: Network | Load nftables tasks
+    ansible.builtin.include_tasks: nftables.yml
+    when:
+      - network_firewall_type == 'nftables'
+      - not network_disable_firewall
+
+  - name: Network | Load firewalld tasks
+    ansible.builtin.include_tasks: firewalld.yml
+    when:
+      - network_firewall_type == 'firewalld'
+      - not network_disable_firewall
 
   - name: Network | Upload custom sshd config
     ansible.builtin.template:

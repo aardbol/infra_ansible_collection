@@ -1,0 +1,48 @@
+---
+- name: Network | Install nftables and firewalld
+  ansible.builtin.apt:
+    name:
+      - nftables
+      - firewalld
+
+- name: Network | Ensure firewalld & nftables are enabled and running
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  changed_when: false
+  loop:
+    - nftables
+    - firewalld
+
+- name: Network | Set default FirewallD zone
+  ansible.builtin.command: firewall-cmd --set-default-zone={{ network_firewalld_default_zone }}
+  changed_when: false
+  when: network_firewalld_default_zone != 'public'
+
+- name: Network | Remove default SSH rule
+  ansible.posix.firewalld:
+    service: ssh
+    state: disabled
+    permanent: true
+  when: "'0.0.0.0/0' not in network_allow_ssh_ipv4"
+
+- name: Network | Allow SSH from whitelisted IPv4 addresses
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="ipv4" source address="{{ item }}" port port="{{ network_ssh_port }}" protocol="tcp" accept'
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ network_allow_ssh_ipv4 }}"
+  when: "'0.0.0.0/0' not in network_allow_ssh_ipv4"
+
+- name: Network | Allow SSH from whitelisted IPv6 addresses
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="ipv6" source address="{{ item }}" port port="{{ network_ssh_port }}" protocol="tcp" accept'
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ network_allow_ssh_ipv6 }}"
+  when:
+    - network_allow_ssh_ipv6_support
+    - "'::/0' not in network_allow_ssh_ipv6"

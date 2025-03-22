@@ -1,0 +1,25 @@
+name: check PR (network)
+
+on:
+  pull_request:
+    paths:
+      - node_base/roles/network/**
+      - .github/**
+      - '!.github/workflows/pri-*.yml'
+      - '!.github/workflows/reusablei-*.yml'
+  # TODO: remove when enforcing PRs
+  push:
+    branches:
+      - main
+    paths:
+      - node_base/roles/network/**
+      - .github/**
+      - '!.github/workflows/pri-*.yml'
+      - '!.github/workflows/reusablei-*.yml'
+
+jobs:
+  run-molecule-tests:
+    uses: ./.github/workflows/reusable-molecule.yml
+    with:
+      collection-name: node_base
+      role-name: network

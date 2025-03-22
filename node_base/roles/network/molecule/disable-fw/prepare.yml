@@ -1,0 +1,23 @@
+---
+- name: Prepare test environment
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure dependencies are installed
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - sudo
+          - python3
+          - openssh-server
+
+    - name: create sshd config dir
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d
+        state: directory
+
+    - name: Ensure /run/sshd directory exists
+      ansible.builtin.file:
+        path: /run/sshd
+        state: directory
+        mode: '0755'

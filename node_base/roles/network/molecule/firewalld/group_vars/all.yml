@@ -1,0 +1,6 @@
+network_allow_ssh_ipv4: ["1.1.1.1/32"]
+network_allow_ssh_ipv6_support: true
+network_allow_ssh_ipv6: ["2001:db8::1/128"]
+network_firewall_type: firewalld
+network_ssh_password_authentication: true
+

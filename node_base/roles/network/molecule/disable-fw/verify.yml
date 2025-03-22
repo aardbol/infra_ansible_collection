@@ -1,0 +1,22 @@
+---
+- name: Verify packages installation
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+      register: packages
+
+    - name: Assert that packages are not installed
+      ansible.builtin.assert:
+        that:
+          - packages.ansible_facts.packages['nftables'] is not defined
+          - packages.ansible_facts.packages['firewalld'] is not defined
+          - packages.ansible_facts.packages['ufw'] is not defined
+
+    - name: Check if nftables is not running
+      ansible.builtin.systemd:
+        name: nftables
+        state: stopped
+      register: nftables_status
+      failed_when: nftables_status is changed

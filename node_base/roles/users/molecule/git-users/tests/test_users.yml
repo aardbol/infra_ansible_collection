@@ -3,12 +3,12 @@
   ansible.builtin.include_vars:
     file: ../../../users/vars/main.yml
 
-- name: Users | Slurp user data from cloned repository
+- name: Slurp user data from cloned repository
   ansible.builtin.slurp:
     src: "{{ _users_git_path }}/users.yml"
   register: _slurped_users
 
-- name: Users | Decode and set user data
+- name: Decode and set user data
   ansible.builtin.set_fact:
     _loaded_users: "{{ _slurped_users.content | b64decode | from_yaml }}"
 

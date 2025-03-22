@@ -1,0 +1,19 @@
+---
+- name: Verify packages installation
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+      register: packages
+
+    - name: Assert that packages are installed
+      ansible.builtin.assert:
+        that:
+          - packages.ansible_facts.packages['nftables'] is defined
+          - packages.ansible_facts.packages['ufw'] is not defined
+
+    - name: Check firewall rules
+      ansible.builtin.command: nft list ruleset
+      register: nft_rules
+      failed_when: "'input' not in nft_rules.stdout or 'forward' not in nft_rules.stdout or 'output' not in nft_rules.stdout"
