@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - node_base/roles/packages/**
-      - .github/**
+      - .github/workflows/pr-packages.yml
+      - .github/workflows/reusable-molecule.yml
       - '!.github/workflows/pri-*.yml'
       - '!.github/workflows/reusablei-*.yml'
   # TODO: remove when enforcing PRs
@@ -13,7 +14,8 @@ on:
       - main
     paths:
       - node_base/roles/packages/**
-      - .github/**
+      - .github/workflows/pr-packages.yml
+      - .github/workflows/reusable-molecule.yml
       - '!.github/workflows/pri-*.yml'
       - '!.github/workflows/reusablei-*.yml'
 
