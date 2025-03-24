@@ -41,7 +41,7 @@ See `defaults/main.yml` for more documentation on usage.
     - role: network
   vars:
     network_ipv6_support: true
-    network_allow_ssh_ipv4: [0.0.0.0/0]
-    network_allow_ssh_ipv6: [::/0]
-    network_ssh_allow_groups: [ssh] # Don't forget to create this group first
+    network_allow_ssh_ipv4: ["0.0.0.0/0"]
+    network_allow_ssh_ipv6: ["::/0"]
+    network_ssh_allow_groups: ["ssh"] # Don't forget to create this group first
 ```

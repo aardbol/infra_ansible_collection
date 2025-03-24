@@ -29,11 +29,11 @@ See `defaults/main.yml` for more documentation on usage.
       - name: ssh
     users_users:
       - name: user1
-        groups: [sudo]
+        groups: ["sudo"]
         authorized_keys: |
           ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQ...
       - name: user2
-        groups: [sudo, ssh]
+        groups: ["sudo", "ssh"]
         authorized_keys: |
           ssh-ed25519 AAAAB3NzaC1yc2EAAAADAQABAAABAQDQ...
       - name: user3
