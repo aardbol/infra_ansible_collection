@@ -8,7 +8,7 @@ on:
       - .github/workflows/reusable-molecule.yml
       - '!.github/workflows/pri-*.yml'
       - '!.github/workflows/reusablei-*.yml'
-      - '!*.md'
+      - '!**.md'
   # TODO: remove when enforcing PRs
   push:
     branches:
@@ -19,7 +19,7 @@ on:
       - .github/workflows/reusable-molecule.yml
       - '!.github/workflows/pri-*.yml'
       - '!.github/workflows/reusablei-*.yml'
-      - '!*.md'
+      - '!**.md'
 
 jobs:
   run-molecule-tests:
