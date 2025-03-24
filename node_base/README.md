@@ -7,7 +7,7 @@ Roles:
 - [packages](roles/packages/README.md) - manage system/pip packages and updates
 - [restart](roles/restart/README.md) - restart a server (after updates)
 - [config](roles/config/README.md) - configure systemd and mountpoints
-- [network](roles/network/README.md) - manage firewall with nftables and SSH configuration
+- [network](roles/network/README.md) - manage firewall and SSH configuration
 
 ## Requirements
 

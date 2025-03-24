@@ -22,4 +22,4 @@ A set of roles used to set up a server. The roles are designed to be used togeth
   - Configure systemd and mount points.
   
 - **[network](node_base/roles/network/README.md)**: 
-  - Manage the firewall with nftables and SSH configuration.
+  - Manage the firewall and SSH configuration.
